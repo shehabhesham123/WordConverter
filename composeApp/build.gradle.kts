@@ -36,6 +36,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(projects.features.interpreter)
+            implementation("io.insert-koin:koin-core:3.4.0")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
