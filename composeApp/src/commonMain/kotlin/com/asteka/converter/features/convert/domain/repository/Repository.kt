@@ -5,5 +5,5 @@ import com.asteka.converter.core.failure.Failure
 import com.asteka.converter.core.functional.Either
 
 abstract class Repository {
-    abstract suspend fun getWordDocLocally(docPath:String): Either<Failure, WordDoc>
+    abstract fun getWordDocLocally(docPath:String): Either<Failure, WordDoc>
 }
