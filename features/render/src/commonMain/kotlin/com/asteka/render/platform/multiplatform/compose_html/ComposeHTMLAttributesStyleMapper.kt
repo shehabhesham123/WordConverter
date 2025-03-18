@@ -3,6 +3,7 @@ package com.asteka.render.platform.multiplatform.compose_html
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -13,20 +14,21 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.asteka.render.core.AttributesStyleMapper
 
-class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<SpanStyle> {
-    override fun getAttributeStyle(attributes: Map<String, String>): SpanStyle {
-        var builder = SpanStyle()
+class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<Style> {
+    override fun getAttributeStyle(attributes: Map<String, String>): Style {
+        var spanStyleBuilder = SpanStyle()
+        var paragraphStyleBuilder:ParagraphStyle? = null
         attributes.forEach { (key, value) ->
             when (key) {
                 "class" -> {
                     if (value.contains("highlight")) {
-                        builder = builder.merge(SpanStyle(background = Color.Yellow))
+                        spanStyleBuilder = spanStyleBuilder.merge(SpanStyle(background = Color.Yellow))
                     }
                     if (value.contains("bold")) {
-                        builder = builder.merge(SpanStyle(fontWeight = FontWeight.Bold))
+                        spanStyleBuilder = spanStyleBuilder.merge(SpanStyle(fontWeight = FontWeight.Bold))
                     }
                     if (value.contains("italic")) {
-                        builder = builder.merge(SpanStyle(fontStyle = FontStyle.Italic))
+                        spanStyleBuilder = spanStyleBuilder.merge(SpanStyle(fontStyle = FontStyle.Italic))
                     }
                 }
 
@@ -35,27 +37,40 @@ class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<SpanStyle> {
                         try {
                             val (styleKey, styleValue) = style.split(":").map { it.trim() }
                             when (styleKey) {
-                                "color" -> builder = builder.merge(SpanStyle(color = parseColor(styleValue)))
-                                "background-color" -> builder =
-                                    builder.merge(SpanStyle(background = parseColor(styleValue)))
+                                "color" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(color = parseColor(styleValue)))
 
-                                "font-size" -> builder = builder.merge(SpanStyle(fontSize = parseFontSize(styleValue)))
-                                "font-weight" -> builder =
-                                    builder.merge(SpanStyle(fontWeight = parseFontWeight(styleValue)))
+                                "background-color" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(background = parseColor(styleValue)))
 
-                                "font-style" -> builder =
-                                    builder.merge(SpanStyle(fontStyle = parseFontStyle(styleValue)))
+                                "font-size" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(fontSize = parseFontSize(styleValue)))
 
-                                "text-decoration" -> builder = builder.merge(
+                                "font-weight" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(fontWeight = parseFontWeight(styleValue)))
+
+                                "font-style" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(fontStyle = parseFontStyle(styleValue)))
+
+                                "text-decoration" -> spanStyleBuilder = spanStyleBuilder.merge(
                                     SpanStyle(
                                         textDecoration = parseTextDecoration(
                                             styleValue
                                         )
                                     )
                                 )
-//                           /* "text-align" -> builder.merge(SpanStyle(textAlign = parseTextAlign(styleValue)))*/   in ParagraphStyle
-                                /*"line-height" -> builder.merge(SpanStyle(lineHeight = parseLineHeight(styleValue)))*/
-                                "letter-spacing" -> builder = builder.merge(
+
+                                "text-align" ->{
+                                    paragraphStyleBuilder = if(paragraphStyleBuilder == null) ParagraphStyle(textAlign = parseTextAlign(styleValue))
+                                    else paragraphStyleBuilder!!.merge(ParagraphStyle(textAlign = parseTextAlign(styleValue)))
+                                }
+
+                                "line-height" ->{
+                                    paragraphStyleBuilder = if(paragraphStyleBuilder == null) ParagraphStyle(lineHeight = parseLineHeight(styleValue))
+                                    else paragraphStyleBuilder!!.merge(ParagraphStyle(lineHeight = parseLineHeight(styleValue)))
+                                }
+
+                                "letter-spacing" -> spanStyleBuilder = spanStyleBuilder.merge(
                                     SpanStyle(
                                         letterSpacing = parseLetterSpacing(
                                             styleValue
@@ -63,21 +78,23 @@ class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<SpanStyle> {
                                     )
                                 )
 
-                                "text-shadow" -> builder =
-                                    builder.merge(SpanStyle(shadow = parseTextShadow(styleValue)))
+                                "text-shadow" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(shadow = parseTextShadow(styleValue)))
 
-                                "font-family" -> builder =
-                                    builder.merge(SpanStyle(fontFamily = parseFontFamily(styleValue)))
+                                "font-family" -> spanStyleBuilder =
+                                    spanStyleBuilder.merge(SpanStyle(fontFamily = parseFontFamily(styleValue)))
                                 // Add more CSS properties as needed
                             }
-                        } catch (e: Exception) { }
+                        } catch (e: Exception) {
+                        }
                     }
                 }
 
                 // Handle specific HTML attributes
                 "href" -> {
                     // Links are typically styled with underline and blue color
-                    builder = builder.merge(SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline))
+                    spanStyleBuilder =
+                        spanStyleBuilder.merge(SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline))
                 }
 
                 "src" -> {
@@ -86,7 +103,7 @@ class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<SpanStyle> {
                 // Add more HTML attributes as needed
             }
         }
-        return builder
+        return Style(spanStyleBuilder, paragraphStyleBuilder)
     }
 
 

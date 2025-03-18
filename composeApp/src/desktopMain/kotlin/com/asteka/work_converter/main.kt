@@ -36,7 +36,7 @@ fun main() = application {
 //        var cnt by remember { mutableStateOf(0) }
 
         var annotatedString by remember { mutableStateOf(AnnotatedString("")) }
-        Component.interpret("/home/shehab/Documents/html_code.txt") {
+        Component.interpret("C:\\Users\\shehab.hesham\\OneDrive - UC Group\\Desktop\\Hello world.htm") {
             annotatedString = it
         }
         App(annotatedString)
@@ -55,20 +55,13 @@ fun counter(cnt: Int, onClick: () -> Unit) {
 
 @Composable
 fun Test() {
-    println("recompse")
     var annotatedString by mutableStateOf(AnnotatedString("Hello world"))
     var bool = false
-
-
-
     Component.interpret("/home/shehab/Documents/html_code.txt") {
-        println(it.text)
         annotatedString = AnnotatedString("")
-        println(annotatedString.text)
         bool = !bool
     }
 
-    println("end")
 }
 
 // as Test

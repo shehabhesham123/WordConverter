@@ -3,7 +3,7 @@ package com.asteka.interpreter.platform.html.tag
 import com.asteka.interpreter.core.Tag
 
 class HTMLTag(
-    val tagName: String,
+    var tagName: String,
     val attributes: Map<String, String>,
     val children: MutableList<HTMLTag>,
     val content: String
