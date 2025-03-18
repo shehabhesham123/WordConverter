@@ -7,7 +7,7 @@ import com.asteka.converter.features.convert.data.local.Local
 import com.asteka.converter.features.convert.domain.repository.Repository
 
 class RepositoryImpl(private val local: Local) : Repository() {
-    override suspend fun getWordDocLocally(docPath: String): Either<Failure, WordDoc> {
+    override fun getWordDocLocally(docPath: String): Either<Failure, WordDoc> {
         return try {
             Either.Right(createDocWord(docPath))
         } catch (e: Exception) {

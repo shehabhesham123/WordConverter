@@ -7,7 +7,7 @@ import com.asteka.converter.core.interact.Usecase
 import com.asteka.converter.features.convert.domain.repository.Repository
 
 class GetWordDocLocally(private val repository: Repository) : Usecase<String, WordDoc>() {
-    override suspend fun run(param: String): Either<Failure, WordDoc> {
+    override fun run(param: String): Either<Failure, WordDoc> {
         return repository.getWordDocLocally(docPath = param)
     }
 }
