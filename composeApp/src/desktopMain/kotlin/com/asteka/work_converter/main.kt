@@ -36,7 +36,7 @@ fun main() = application {
 //        var cnt by remember { mutableStateOf(0) }
 
         var annotatedString by remember { mutableStateOf(AnnotatedString("")) }
-        Component.interpret("/home/shehab/Documents/html_code.txt") {
+        Component.interpret("C:\\Users\\shehab.hesham\\OneDrive - UC Group\\Desktop\\book_test.htm") {
             annotatedString = it
         }
         App(annotatedString)
