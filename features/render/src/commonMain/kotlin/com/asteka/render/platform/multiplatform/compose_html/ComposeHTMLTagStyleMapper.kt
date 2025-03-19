@@ -73,6 +73,7 @@ class ComposeHTMLTagStyleMapper : TagStyleMapper<Style> {
             "em" -> SpanStyle(fontStyle = FontStyle.Italic) // Emphasis (italic) style
             "b" -> SpanStyle(fontWeight = FontWeight.Bold) // Bold style
             "u" -> SpanStyle(textDecoration = TextDecoration.Underline) // Underline style
+            "i" -> SpanStyle(fontStyle = FontStyle.Italic) // Underline style
             "span" -> SpanStyle() // Default style for span
             "img" -> SpanStyle() // Default style for image (not applicable for text rendering)
             "br" -> SpanStyle() // Default style for line break (not applicable for text rendering)
