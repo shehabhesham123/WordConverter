@@ -1,23 +1,25 @@
 package com.asteka.render.platform.multiplatform.compose_html
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextGeometricTransform
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.asteka.render.core.TagStyleMapper
 
-class ComposeHTMLTagStyleMapper:TagStyleMapper<SpanStyle> {
-    override fun getStyleForTag(tagName: String): SpanStyle {
-        return when (tagName.lowercase()) {
+class ComposeHTMLTagStyleMapper : TagStyleMapper<Style> {
+    override fun getStyleForTag(tagName: String): Style {
+        var paragraphStyle: ParagraphStyle? = null
+        val spanStyle = when (tagName.lowercase()) {
             // Block-level elements
             "div" -> SpanStyle() // Default style for div
-            "p" -> SpanStyle(fontSize = 16.sp, /*lineHeight = 24 in paragraph style*/) // Paragraph style
+            "p" -> {
+                paragraphStyle = ParagraphStyle(lineHeight = 24.sp)
+                SpanStyle(fontSize = 16.sp /*lineHeight = 24 in paragraph style*/)
+            } // Paragraph style
             "h1" -> SpanStyle(fontWeight = FontWeight.Bold, fontSize = 32.sp)
             "h2" -> SpanStyle(fontWeight = FontWeight.Bold, fontSize = 28.sp)
             "h3" -> SpanStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)
@@ -29,11 +31,15 @@ class ComposeHTMLTagStyleMapper:TagStyleMapper<SpanStyle> {
             "li" -> SpanStyle() // Default style for list item
             "blockquote" -> SpanStyle(fontStyle = FontStyle.Italic, color = Color.Gray) // Blockquote style
             "pre" -> SpanStyle(fontFamily = FontFamily.Monospace, fontSize = 14.sp) // Preformatted text
-            "code" -> SpanStyle(fontFamily = FontFamily.Monospace, fontSize = 14.sp, background = Color.LightGray) // Inline code
+            "code" -> SpanStyle(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 14.sp,
+                background = Color.LightGray
+            ) // Inline code
             "table" -> SpanStyle() // Default style for table
             "tr" -> SpanStyle() // Default style for table row
             "td" -> SpanStyle(/*padding = TextUnit(4.sp)*/) // Table cell style
-            "th" -> SpanStyle(fontWeight = FontWeight.Bold,/* padding = TextUnit(4.sp)*/) // Table header style
+            "th" -> SpanStyle(fontWeight = FontWeight.Bold/* padding = TextUnit(4.sp)*/) // Table header style
             "form" -> SpanStyle() // Default style for form
             "input" -> SpanStyle() // Default style for input (not applicable for text rendering)
             "button" -> SpanStyle(background = Color.Blue, color = Color.White) // Button style
@@ -75,5 +81,6 @@ class ComposeHTMLTagStyleMapper:TagStyleMapper<SpanStyle> {
             // Fallback for unknown tags
             else -> SpanStyle() // Default style for unknown tags
         }
+        return Style(spanStyle = spanStyle, paragraphStyle = paragraphStyle)
     }
 }
