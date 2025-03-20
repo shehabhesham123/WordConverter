@@ -1,5 +1,7 @@
 package com.asteka.interpreter.core
 
+import java.io.File
+
 interface Interpreter {
-    fun interpret(code: String): InterpreterResult
+    fun interpret(file:File): InterpreterResult
 }

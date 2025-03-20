@@ -1,4 +1,7 @@
 package com.asteka.converter.features.convert.domain.entity
 
-data class WordDoc(val content: String) {
+import java.io.File
+
+data class WordDoc(private val path: String) {
+    val file = File(path)
 }

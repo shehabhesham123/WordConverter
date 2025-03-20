@@ -34,9 +34,6 @@ fun main() = application {
         var inlineTextContentMap by remember { mutableStateOf(mapOf<String, InlineTextContent>()) }
         Component.interpret("C:\\Users\\shehab.hesham\\OneDrive - UC Group\\Desktop\\book_test.html") {
             annotatedString = it.annotatedString
-            it.inlineTextContentMap.forEach {
-                println("key: ${it.key}, value: ${it.value}")
-            }
             inlineTextContentMap = it.inlineTextContentMap
         }
         App(annotatedString,inlineTextContentMap)
@@ -83,7 +80,7 @@ object Component : KoinComponent {
     }
 
     fun onSuccess(wordDoc: WordDoc, onSuccess2: (RenderResult) -> Unit) {
-        onSuccess2(ComposeRender(interpreter).render(wordDoc.content))
+        onSuccess2(ComposeRender(interpreter).render(wordDoc.file))
     }
 }
 
