@@ -1,4 +1,4 @@
-package com.asteka.render.platform.multiplatform.compose_html
+package com.asteka.render.platform.multiplatform.compose_html.utilities
 
 import androidx.compose.ui.graphics.Color
 

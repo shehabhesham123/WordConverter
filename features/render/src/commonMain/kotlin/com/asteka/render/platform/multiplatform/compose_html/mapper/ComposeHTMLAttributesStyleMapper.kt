@@ -1,4 +1,4 @@
-package com.asteka.render.platform.multiplatform.compose_html
+package com.asteka.render.platform.multiplatform.compose_html.mapper
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -12,7 +12,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.asteka.render.core.AttributesStyleMapper
+import com.asteka.render.core.mapper.AttributesStyleMapper
+import com.asteka.render.platform.multiplatform.compose_html.utilities.ColorParser
+import com.asteka.render.platform.multiplatform.compose_html.entity.Style
 
 class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<Style> {
     override fun getAttributeStyle(attributes: Map<String, String>): Style {
@@ -30,6 +32,13 @@ class ComposeHTMLAttributesStyleMapper : AttributesStyleMapper<Style> {
                     if (value.contains("italic")) {
                         spanStyleBuilder = spanStyleBuilder.merge(SpanStyle(fontStyle = FontStyle.Italic))
                     }
+                }
+
+                "align" ->{
+                    println("apply align")
+                    paragraphStyleBuilder = if(paragraphStyleBuilder == null) ParagraphStyle(textAlign = parseTextAlign(value))
+                    else paragraphStyleBuilder!!.merge(ParagraphStyle(textAlign = parseTextAlign(value)))
+
                 }
 
                 "style" -> {

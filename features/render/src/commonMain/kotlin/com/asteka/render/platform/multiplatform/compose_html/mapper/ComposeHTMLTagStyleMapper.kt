@@ -1,4 +1,4 @@
-package com.asteka.render.platform.multiplatform.compose_html
+package com.asteka.render.platform.multiplatform.compose_html.mapper
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.ParagraphStyle
@@ -8,7 +8,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import com.asteka.render.core.TagStyleMapper
+import com.asteka.render.core.mapper.TagStyleMapper
+import com.asteka.render.platform.multiplatform.compose_html.entity.Style
 
 class ComposeHTMLTagStyleMapper : TagStyleMapper<Style> {
     override fun getStyleForTag(tagName: String): Style {

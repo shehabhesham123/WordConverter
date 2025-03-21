@@ -1,4 +1,4 @@
-package com.asteka.render.platform.multiplatform.compose_html
+package com.asteka.render.platform.multiplatform.compose_html.entity
 
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle

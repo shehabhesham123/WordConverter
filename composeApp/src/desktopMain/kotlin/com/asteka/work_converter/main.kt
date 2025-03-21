@@ -15,11 +15,16 @@ import com.asteka.converter.features.convert.domain.entity.WordDoc
 import com.asteka.converter.features.convert.domain.interactor.GetWordDocLocally
 import com.asteka.interpreter.platform.di.InterpreterModule
 import com.asteka.interpreter.platform.html.interpreter.HTMLInterpreter
+import com.asteka.interpreter.platform.html.interpreter.HTMLInterpreterResult
 import com.asteka.render.platform.multiplatform.ComposeRender
-import com.asteka.render.platform.multiplatform.compose_html.RenderResult
+import com.asteka.render.platform.multiplatform.compose_html.mapper.ComposeHTMLAttributesStyleMapper
+import com.asteka.render.platform.multiplatform.compose_html.mapper.ComposeHTMLTagStyleMapper
+import com.asteka.render.platform.multiplatform.compose_html.render.ComposeHTMLRender
+import com.asteka.render.platform.multiplatform.compose_html.render.ComposeRenderResult
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
+import java.nio.file.Paths
 
 fun main() = application {
     startKoin {
@@ -32,11 +37,12 @@ fun main() = application {
     ) {
         var annotatedString by remember { mutableStateOf(AnnotatedString("")) }
         var inlineTextContentMap by remember { mutableStateOf(mapOf<String, InlineTextContent>()) }
-        Component.interpret("C:\\Users\\shehab.hesham\\OneDrive - UC Group\\Desktop\\book_test.html") {
+
+        Component.interpret("/home/shehab/Documents/book.html") {
             annotatedString = it.annotatedString
             inlineTextContentMap = it.inlineTextContentMap
         }
-        App(annotatedString,inlineTextContentMap)
+        App(annotatedString, inlineTextContentMap)
     }
 }
 /*
@@ -66,6 +72,28 @@ fun Test() {
     println("end")
 }*/
 
+object Component : KoinComponent {
+    private val interpreter: HTMLInterpreter by inject<HTMLInterpreter>()
+    private val getWordDocLocally: GetWordDocLocally by inject<GetWordDocLocally>()
+
+    fun interpret(path: String, onSuccess2: (ComposeRenderResult) -> Unit) {
+        getWordDocLocally.invoke(path).fold(::onFailure) { onSuccess(it, onSuccess2) }
+    }
+
+    fun onFailure(failure: Failure) {
+        println(failure)
+    }
+
+    fun onSuccess(wordDoc: WordDoc, onSuccess2: (ComposeRenderResult) -> Unit) {
+        val imageCacheFolderPath = Paths.get(wordDoc.file.path).parent?.toString() ?: ""
+        println("imageCacheFolderPath: $imageCacheFolderPath")
+        val body = (interpreter.interpret(wordDoc.file) as HTMLInterpreterResult).body
+        val composeHtmlRender = ComposeHTMLRender(ComposeHTMLTagStyleMapper(), ComposeHTMLAttributesStyleMapper())
+        onSuccess2(ComposeRender(composeHtmlRender).render(body,imageCacheFolderPath) as ComposeRenderResult)
+    }
+}
+
+/*
 // as Test
 object Component : KoinComponent {
     private val interpreter: HTMLInterpreter by inject<HTMLInterpreter>()
@@ -83,6 +111,7 @@ object Component : KoinComponent {
         onSuccess2(ComposeRender(interpreter).render(wordDoc.file))
     }
 }
+*/
 
 
 /*
